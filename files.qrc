@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>CameraParameters.yml</file>
+        <file>FrontalFace.xml</file>
+    </qresource>
+</RCC>
