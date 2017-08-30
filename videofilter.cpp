@@ -142,12 +142,6 @@ QVideoFrame FilterRunnable::run( QVideoFrame *input,
 {
 
 
-    // La valores por defecto son estos.
-    int gaussianBlurSize = 7;
-    double gaussianBlurCoef = 1.5f;
-    int cannyKernelSize = 3;
-    double cannyThreshold = 0;
-
 
 
     if ( ! input->isValid() )
@@ -177,56 +171,64 @@ QVideoFrame FilterRunnable::run( QVideoFrame *input,
 
         input->map(QAbstractVideoBuffer::ReadOnly);
         QImage image = imageWrapper(*input);
-
-//        QImage imageScaled = image.scaled(640,480,Qt::IgnoreAspectRatio);
-
-//        qDebug()<<"-.-.-.-.-.-Tamaño QImage :  "<<image.size();
-
+        image = image.scaled(480,480);
         cv::Mat mat(image.width(),image.height(),CV_8UC3,image.bits(), image.bytesPerLine());
 
+//        cv::Mat dst;
+//        cv::resize(mat, dst, cv::Size(320,240));
+//        int rows = dst.rows;
+//        int cols = dst.cols;
+//        cv::Size s = dst.size();
+//        rows = s.height;
+//        cols = s.width;
 
-        cv::Mat dst;
-        cv::resize(mat, dst, cv::Size(320,240));
-        int rows = dst.rows;
-        int cols = dst.cols;
-
-        cv::Size s = dst.size();
-        rows = s.height;
-        cols = s.width;
-
-//        resize(mat, dst, Size(1024, 768), 0, 0, INTER_CUBIC);
-
-        qDebug()<<"-.-.-.-.-.-Tamaño mat :  "<<rows;
-
-        qDebug()<<"-.-.-.-.-.-Tamaño mat dst :  "<<cols;
-
+//        qDebug()<<"-.-.-.-.-.-Tamaño mat :  "<<rows;
+//        qDebug()<<"-.-.-.-.-.-Tamaño mat dst :  "<<cols;
 
         vector< Rect > detectedFaces;
         detectedFaces.clear();
-        frontalFaceClassifier.detectMultiScale( dst, detectedFaces,
-                                         1.05, 2, 0 | CASCADE_SCALE_IMAGE, Size(60,60) );
+        frontalFaceClassifier.detectMultiScale( mat, detectedFaces,
+                                         1.05, 2, 0 | CV_HAAR_SCALE_IMAGE , Size(80,80) );
 
-
+        qDebug()<<"Cantidad de caras en el vector : " << detectedFaces.size();
         if( detectedFaces.size() > 0 ){
+            qDebug()<<"Cantidad de caras en el vector : " << detectedFaces.size();
             actualFace = detectedFaces.at( 0 );
-            countDetectedFaces++;
-            qDebug()<<"**************************qwerty*************************"<<detectedFaces.size()<<"------------------------";
-            Point pt1;
-            pt1.x = 0;
-            pt1.y = 0;
-            Point pt2;
-            pt2.x = 700;
-            pt2.y = 700;
-            cv::line(mat, pt1, pt2, cv::Scalar(0,255,0), 20);
+            qDebug() << "Area de la cara: " <<actualFace.area();
+
+//            dst = mat(actualFace);
+//            countDetectedFaces++;
+//            qDebug()<<"**********qwerty**********"<<detectedFaces.size()<<"----------";
+//            cv::GaussianBlur(mat,ROI,Size(60,60),0,0);
+//            blur(mat,mat,Size( 60, 60 ), Point(-1,-1));
+
+//            Mat blurFace;
+//            blurFace = mat(actualFace);
+//            blur(blurFace,mat,Size( 60, 60 ), Point(-1,-1));
+//            for(int i=0;i<detectedFaces.size();i++)
+//            {
+//             Rect dibujarCuadrado = detectedFaces.at(i);
+
+//             cv::rectangle (mat, dibujarCuadrado, 20, 1, LINE_8, 0);
+//            }
         }
+        //            Point pt1;
+        //            pt1.x = 0;
+        //            pt1.y = 0;
+        //            Point pt2;
+        //            pt2.x = 700;
+        //            pt2.y = 700;
+        //            cv::line(mat, pt1, pt2, cv::Scalar(0,255,0), 20);
         input->unmap();
         texture->setData(image);
         texture->bind();
-        qDebug()<<"Cuenta de caras detectadasssssss : "<<countDetectedFaces<<"-------------------------------";
+
+        qDebug()<<"Cuenta de caras detectadasssssss : "<<countDetectedFaces<<"----------";
 
         return frameFromTexture(texture->textureId(),input->size(),input->pixelFormat());
     }
 }
+
 void FilterRunnable::deleteColorComponentFromYUV( QVideoFrame *input )
 {
     // Assign 0 to Us and Vs
@@ -238,7 +240,6 @@ void FilterRunnable::deleteColorComponentFromYUV( QVideoFrame *input )
         inputBits[i] = 127;    
 }
 
-// Metodo extraido de https://github.com/alpqr/qt-opencv-demo/blob/master/opencvhelper.cpp
 cv::Mat FilterRunnable::yuvFrameToMat8( QVideoFrame * frame)
 {    
 

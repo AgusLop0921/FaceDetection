@@ -17,6 +17,7 @@ Item {
         imageCapture  {
             resolution: "640x480"
         }
+        position: Camera.BackFace
     }
 
     VideoOutput {

@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>CameraParameters.yml</file>
         <file>FrontalFace.xml</file>
+        <file>haar_face_0.xml</file>
+        <file>haar_face_1.xml</file>
+        <file>lbp_face.xml</file>
+        <file>haarcascade_frontalface_alt.xml</file>
+        <file>haarcascade_frontalface_alt_tree.xml</file>
+        <file>haarcascade_frontalface_default.xml</file>
     </qresource>
 </RCC>

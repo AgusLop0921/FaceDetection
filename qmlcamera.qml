@@ -37,7 +37,7 @@ Rectangle  {
 //            customFocusPoint: Qt.point(0.2, 0.2) // Focus relative to top-left corner
         }
 
-        position: Camera.FrontFace
+        position: Camera.BackFace
 //        position: Camera.BackFace
 
                 captureMode: Camera.CaptureStillImage

@@ -70,25 +70,14 @@ void Registro::configurarWidgets()
 {
     int altoBoton = this->height() / 10;
     int altoLabel = altoBoton;
-    int altoLineEdit = 2 * altoBoton / 3;
 
 #ifdef Q_OS_ANDROID
     int altoTextoLabel = altoLabel / 5;
 #else
-    int altoTextoLabel = 2 * altoLabel / 5;
 #endif
 
     int altoCamara = this->height() - altoBoton - altoLabel;
     int anchoPantalla = this->width();
-    int altoPantalla = this->height();
-    int borde = this->width() / 100;
-
-    QFont font("Angelina", altoTextoLabel, QFont::Bold);
-//    ui->label->setText( "Registre su ingreso y salida" );
-
-//    ui->pbRegistrar->setFont( font );
-//    ui->pbRegistrar->setColor( "#9c27b0" );
-//    ui->pbRegistrar->setTexto( "Ingresar" );
 
     ui->scene->setGeometry( QRect( 0, altoLabel,
                                    anchoPantalla, altoCamara ) );
